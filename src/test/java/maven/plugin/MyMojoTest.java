@@ -1,60 +1,35 @@
 package maven.plugin;
 
-
-import org.apache.maven.plugin.testing.MojoRule;
-import org.apache.maven.plugin.testing.WithoutMojo;
-
-import org.junit.Rule;
-
-import static org.junit.Assert.*;
-
-import org.junit.Test;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
+import java.nio.file.Paths;
 
-public class MyMojoTest {
-    @Rule
-    public MojoRule rule = new MojoRule() {
-        @Override
-        protected void before() throws Throwable {
-        }
+@ExtendWith(MockitoExtension.class)
+class MyMojoTest {
 
-        @Override
-        protected void after() {
-        }
-    };
+    private MyMojo mockMyMojo;
+    @Mock
+    private File sourceDirectory;
 
-    /**
-     * @throws Exception if any
-     */
-    @Test
-    public void testSomething()
-            throws Exception {
-        File pom = new File("target/test-classes/project-to-test/");
-        assertNotNull(pom);
-        assertTrue(pom.exists());
-
-        MyMojo myMojo = (MyMojo) rule.lookupConfiguredMojo(pom, "touch");
-        assertNotNull(myMojo);
-        myMojo.execute();
-
-        File outputDirectory = (File) rule.getVariableValueFromObject(myMojo, "outputDirectory");
-        assertNotNull(outputDirectory);
-        assertTrue(outputDirectory.exists());
-
-        File touch = new File(outputDirectory, "touch.txt");
-        assertTrue(touch.exists());
-
+    @BeforeEach
+    void setUp() {
+//        mockMyMojo = new MyMojo(sourceDirectory);
+//        D:\BigData\code\my-maven-plugin\src\main\java\maven\plugin
     }
 
-    /**
-     * Do not need the MojoRule.
-     */
-    @WithoutMojo
-    @Test
-    public void testSomethingWhichDoesNotNeedTheMojoAndProbablyShouldBeExtractedIntoANewClassOfItsOwn() {
-        assertTrue(true);
+    @Test()
+    @Disabled
+    void execute() throws MojoExecutionException {
+        Mockito.when(sourceDirectory.toPath()).thenReturn(Paths.get("src\\main"));
+        mockMyMojo.execute();
+        Mockito.verify(sourceDirectory).toPath();
     }
-
 }
-
